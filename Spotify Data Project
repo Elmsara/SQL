@@ -56,3 +56,18 @@ average_popularity,
 'Top Star' AS Tag
 FROM Popularity_avg_CTE
 WHERE average_popularity>=90;
+
+# Select all the bike lanes that have an average safety rating of 4.0 or higher.
+WITH Average_Safety_Rating AS
+(
+SELECT 
+street,
+AVG(safetyrating) AS Average_Safety
+FROM CityBikeLanes
+GROUP BY street
+)
+SELECT street,
+Average_Safety,
+'Safe Lane' AS Tag
+FROM Average_Safety_Rating
+WHERE Average_Safety >= 4;
