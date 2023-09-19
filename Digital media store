@@ -1,0 +1,60 @@
+--the Invoices of customers who are from Brazil.
+SELECT *
+FROM chinook.customers 
+WHERE Country = "Brazil" ;
+
+--Show the Employees who are Sales Agents.
+SELECT * 
+FROM chinook.Employees
+WHERE Title = "Sales Support Agent" ;
+
+--Find a unique/distinct list of billing countries from the Invoice table.
+SELECT DISTINCT invoices.BillingCountry
+FROM chinook.invoices;
+
+-- Show the invoices associated with each sales agent.
+SELECT EMP.LastName,EMP.FirstName,INV.InvoiceId
+FROM chinook.employees EMP
+JOIN chinook.customers Cust 
+ON Cust.SupportRepId = EMP.EmployeeId
+JOIN chinook.invoices INV
+ON INV.CustomerId = Cust.CustomerId;
+
+--Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT INV.Total,Cust.FirstName,Cust.LastName,Cust.Country,EMP.LastName,EMP.FirstName
+FROM chinook.employees EMP
+JOIN chinook.customers Cust 
+ON Cust.SupportRepId = EMP.EmployeeId
+JOIN chinook.invoices INV
+ON INV.CustomerId = Cust.CustomerId;
+
+--What are the total sales for 2009?
+SELECT SUM(Total)
+FROM chinook.Invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+--a query that includes the purchased track name with each invoice line ID.
+SELECT TR.Name,INV.InvoiceLineId
+FROM chinook.Invoice_items INV
+JOIN chinook.Tracks TR 
+ON INV.TrackId = TR.TrackId;
+
+--a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT ART.name as Artist, TR.Name as Track, INV.InvoiceLineId
+FROM chinook.Invoice_items INV
+LEFT JOIN chinook.tracks TR
+ON INV.TrackID=TR.TrackID
+INNER JOIN chinook.albums ALB
+ON ALB.AlbumID=TR.AlbumID
+LEFT JOIN chinook.artists ART
+ON ART.ArtistID=ALB.ArtistID;
+
+--Show the total sales made by each sales agent.
+SELECT EMP.FirstName, EMP.LastName,ROUND(SUM(Inv.Total), 2) as 'total sales' 
+FROM chinook.Employees EMP
+JOIN chinook.Customers Cust 
+ON Cust.SupportRepId = EMP.EmployeeId
+JOIN chinook.Invoices INV 
+ON INV.CustomerId = Cust.CustomerId
+WHERE EMP.Title = 'Sales Support Agent' 
+GROUP BY EMP.FirstName;
