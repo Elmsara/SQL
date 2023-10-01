@@ -1,0 +1,32 @@
+
+/* # Select the top 10 companies based on thier revenue*/
+SELECT company_name, industry, revenue, employees
+FROM fortune_companies 
+ORDER BY revenue DESC
+LIMIT 10;
+
+/* # Count the number of companies that have the same industry*/
+SELECT COUNT(*), industry
+FROM fortune_companies
+GROUP BY industry;
+
+/* # Which companies have healthcare benefits, maternity_leave_weeks greater oer equal 12 weeks and at least 20 paid time off days?*/
+SELECT company_name, healthcare_benefits, paid_time_off_days, maternity_leave_weeks
+FROM fortune_companies
+WHERE healthcare_benefits= 1 AND paid_time_off_days>= 20 AND  maternity_leave_weeks>= 12;
+
+/* # Assign all the companiesas "Great workplace for a mother", "acceptable", or "abysmal" based on healthcare_benefits AND the maternity leave offered */ . 
+SELECT company_name,
+CASE 
+  WHEN maternity_leave_weeks >= 10 AND healthcare_benefits=1 THEN 'Great workplace for a mother'
+  WHEN maternity_leave_weeks >= 8  AND healthcare_benefits=1 THEN 'acceptable'
+  ELSE 'abysmal'
+END as mother_workplace
+FROM fortune_companies;
+
+/* # Which companies have an average revenue of at least $150 Billion, and what are their avg revenues?*/
+SELECT company_name, industry, ROUND(AVG(revenue)) AS average_revenue
+FROM fortune_companies 
+GROUP BY company_name
+HAVING average_revenue >= 150
+ORDER BY average_revenue ASC;
